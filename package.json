@@ -11,7 +11,7 @@
 		"matpad_bundle": "bun build --bundle source/matpad.js --outfile ./bin/bin.js --target=bun",
 		"matpad_shim": "bun shim.js",
 		"matpad_build":"bun build --compile --minify ./bin/bin.js --outfile ./bin/matpad && rm ./bin/bin.js",
-		"compile": "bun run matpad_bundle && bun run matpad_shim && bun run matpad_compile",
+		"compile": "bun run matpad_bundle && bun run matpad_shim && bun run matpad_build",
 		"start":"bun source/matpad.js",
 		"build": "babel --out-dir=dist source",
 		"dev": "babel --out-dir=dist --watch source",
