@@ -1,8 +1,8 @@
-import React from 'react'; // idk why but we need this here for builds but not compiles. idk what we even need the build for tbh, probably will remove it
-// import "./yoga.wasm" with { type: "file" }; // this was apparently a fix for the yoga.wasm problem, but didn't work for me
 import { useState, useEffect } from 'react';
 import { Text, Box, useInput, useStdout, render } from 'ink';
 import { evaluate } from 'mathjs';
+// import React from 'react'; // idk why but we need this here for builds but not compiles. idk what we even need the build for tbh, probably will remove it
+// import "./yoga.wasm" with { type: "file" }; // this was apparently a fix for the yoga.wasm problem, but didn't work for me
 
 // resize window. Stole it from someone online
 function useStdoutDimensions() {
@@ -28,12 +28,35 @@ function App() {
 	const [columns, rows] = useStdoutDimensions();
 	// each line is an expression/newline in the text editor
 	const [text, setText] = useState(['']);
-	const [cursor, setCursor] = useState({ row: 0, col: 0 });
+	const [window, setWindow] = useState({ min:0, max:rows - 2}); // min and max line of the text to show
 	// const [out, setOut] = useState('');
 
+	const [cursor, setCursor] = useState({ row: 0, col: 0 });
 	const [cursorVisible, setCursorVisible] = useState(true);
 	const cursorInterval = 500;
 	const cursorChar = '█';
+
+	useEffect(() => {
+		const viewHeight = rows - 2; // account for borders
+
+		setWindow(prev => {
+			let min = prev.min;
+			let max = min + viewHeight;
+
+			// ensure cursor is visible
+			if (cursor.row < min) {
+				min = cursor.row;
+				max = min + viewHeight;
+			}
+
+			if (cursor.row >= max) {
+				max = cursor.row + 1;
+				min = Math.max(0, max - viewHeight);
+			}
+
+			return { min, max };
+		});
+	}, [rows]);
 
 	// cursor blink
 	useEffect(() => {
@@ -52,6 +75,7 @@ function App() {
 
 		// enter, create a new line in the array text.
 		if (key.return) {
+			let newRow = row + 1
 			setText(lines => {
 				const line = lines[row];
 				const before = line.slice(0, col);
@@ -59,11 +83,17 @@ function App() {
 
 				const newLines = [...lines];
 				newLines[row] = before;
-				newLines.splice(row + 1, 0, after);
+				newLines.splice(newRow, 0, after);
 				return newLines;
 			});
 
-			setCursor({ row: row + 1, col: 0 });
+			setCursor({ row: newRow, col: 0 });
+			if (newRow >= window.max) {
+				setWindow(({min, max})=>({
+					min: min+1,
+					max: max+1
+				}))
+			}
 			return;
 		}
 
@@ -119,23 +149,45 @@ function App() {
 		}
 
 		if (key.upArrow) {
-			if (row > 0) {
-				const newRow = row - 1;
+			const newRow = row - 1;
+			if (newRow >= 0) {
 				setCursor({
 					row: newRow,
 					col: Math.min(col, text[newRow].length)
 				});
+				if (newRow < window.min) {
+					setWindow(({min, max})=>({
+						min: min-1,
+						max: max-1
+					}))
+				}
+			} else { // go to start of line
+				setCursor({
+					row: row,
+					col: 0
+				})
 			}
 			return;
 		}
 
 		if (key.downArrow) {
-			if (row < text.length - 1) {
-				const newRow = row + 1;
+			const newRow = row + 1;
+			if (newRow < text.length) {
 				setCursor({
 					row: newRow,
 					col: Math.min(col, text[newRow].length)
 				});
+				if (newRow >= window.max) {
+					setWindow(({min, max})=>({
+						min: min+1,
+						max: max+1
+					}))
+				}
+			} else { // go to end of line
+				setCursor({
+					row: row,
+					col: text[row].length
+				})
 			}
 			return;
 		}
@@ -159,8 +211,8 @@ function App() {
 
 	// render text
 	const renderInput = () => {
-		return text.map((line, i) => {
-			if (i !== cursor.row) return line;
+		return text.slice(window.min, window.max).map((line, i) => {
+			if (i + window.min !== cursor.row) return line;
 
 			const before = line.slice(0, cursor.col);
 			const currentChar = line[cursor.col] ?? ' ';
@@ -200,7 +252,7 @@ function App() {
 			}
 			return msg
 		})
-		return String(outputs.join('\n'));
+		return String(outputs.slice(window.min, window.max).join('\n'));
 	};
 
 	return (
