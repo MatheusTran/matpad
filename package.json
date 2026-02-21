@@ -11,7 +11,7 @@
 		"build": "babel --out-dir=dist source",
 		"dev": "babel --out-dir=dist --watch source",
 		"test": "prettier --check . && xo && ava",
-		"compile": "bun build ./source/matpad.js --compile --outfile ./bin/matpad"
+		"compile": "bun build ./source/matpad.js --compile --outfile ./bin/matpad && bun build ./source/calcli.mjs --compile --outfile ./bin/calcli"
 	},
 	"files": [
 		"dist"

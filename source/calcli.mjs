@@ -51,7 +51,7 @@ function prompt() {
     console.log(`+${'-'.repeat(cols - 4)}+`)
 
     // get prompt from user
-    rl.question(colors.blue(`inp[${scope.count}]:`), (line) => {
+    rl.question(colors.blue(`inp[${scope.count}]: `), (line) => {
         // current sanitation doesn't do anything. might add features in the future
         const input = sanitize(line)
         // append input to list
