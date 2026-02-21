@@ -2,7 +2,7 @@
 	"name": "matpad",
 	"version": "0.0.0",
 	"license": "MIT",
-	"bin": "dist/cli.js",
+	"bin": "dist/matpad.js",
 	"type": "module",
 	"engines": {
 		"node": ">=16"
@@ -11,7 +11,7 @@
 		"build": "babel --out-dir=dist source",
 		"dev": "babel --out-dir=dist --watch source",
 		"test": "prettier --check . && xo && ava",
-		"compile": "bun build ./source/cli.js --compile --outfile ./bin/matpad"
+		"compile": "bun build ./source/matpad.js --compile --outfile ./bin/matpad"
 	},
 	"files": [
 		"dist"
