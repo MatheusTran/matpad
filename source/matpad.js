@@ -36,6 +36,7 @@ function App() {
 	const cursorInterval = 500;
 	const cursorChar = '█';
 
+	// update view window when updating terminal size
 	useEffect(() => {
 		const viewHeight = rows - 2; // account for borders
 

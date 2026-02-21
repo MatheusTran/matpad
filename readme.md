@@ -9,17 +9,15 @@ $ bun install
 
 ## CLI
 
-there are two apps, the matpad app is run by
+run the script by
 
 ```bash
-$ bun source/matpad.js
+$ bun start
 ```
 this creates a little notepad, kinda like heynote
 
-and also calcli app, run by
+you can also generate binaries with
 
 ```bash
-$ bun source/calcli.js
+$ bun compile
 ```
-
-the calcli app is closer to wolfram, and is just a simple repl wrapper for mathjs
