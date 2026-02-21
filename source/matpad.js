@@ -1,3 +1,5 @@
+import React from 'react'; // idk why but we need this here for builds
+// import "./yoga.wasm" with { type: "file" };
 import { useState, useEffect } from 'react';
 import { Text, Box, useInput, useStdout, render } from 'ink';
 import { evaluate } from 'mathjs';

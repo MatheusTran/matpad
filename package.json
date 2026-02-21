@@ -8,10 +8,16 @@
 		"node": ">=16"
 	},
 	"scripts": {
+		"bundle": "bun build --bundle source/matpad.js --outfile bin.js --target=bun",
+		"shim": "bun shim.js",
+		"matpad_exe":"bun build --compile --minify bin.js --outfile ./bin/matpad && rm bin.js",
+		"matpad_compile": "bun run bundle && bun run shim && bun run matpad_exe",
+		"calcli_compile": "bun build ./source/calcli.mjs --compile --outfile ./bin/calcli",
+		"compile": "bun run matpad_compile && bun run calcli_compile",
+		"start":"bun source/matpad.js",
 		"build": "babel --out-dir=dist source",
 		"dev": "babel --out-dir=dist --watch source",
-		"test": "prettier --check . && xo && ava",
-		"compile": "bun build ./source/matpad.js --compile --outfile ./bin/matpad && bun build ./source/calcli.mjs --compile --outfile ./bin/calcli"
+		"test": "prettier --check . && xo && ava"
 	},
 	"files": [
 		"dist"
