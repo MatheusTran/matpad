@@ -1,5 +1,5 @@
-import React from 'react'; // idk why but we need this here for builds
-// import "./yoga.wasm" with { type: "file" };
+import React from 'react'; // idk why but we need this here for builds but not compiles. idk what we even need the build for tbh, probably will remove it
+// import "./yoga.wasm" with { type: "file" }; // this was apparently a fix for the yoga.wasm problem, but didn't work for me
 import { useState, useEffect } from 'react';
 import { Text, Box, useInput, useStdout, render } from 'ink';
 import { evaluate } from 'mathjs';
