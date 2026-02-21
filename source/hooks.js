@@ -55,6 +55,10 @@ export function DataContext(props) {
 	// input handling
 	useInput((input, key) => {
 		if (key.escape) exit();
+		// if (key.ctrl || key.meta) {
+
+		// 	return
+		// } // too lazy to do commands like ctrl + c, ctrl + v
 
 		const { row, col } = cursor;
 
@@ -189,7 +193,6 @@ export function DataContext(props) {
 			return;
 		}
 
-		if (key.ctrl || key.meta) return;
 		if (!input) return;
 
 		// write character
