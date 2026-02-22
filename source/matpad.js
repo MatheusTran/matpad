@@ -3,7 +3,7 @@ import { App } from "./App";
 import { DataContext } from "./hooks";
 
 render(
-<DataContext>
-	<App/>
-</DataContext>
+	<DataContext>
+		<App/>
+	</DataContext>
 );

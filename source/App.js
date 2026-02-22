@@ -1,6 +1,7 @@
 import { Text, Box } from 'ink';
 import { evaluate } from 'mathjs';
 import { useData } from './hooks';
+import { useEffect } from "react";
 
 export function App() {
 	const {
@@ -12,6 +13,7 @@ export function App() {
 		cursorVisible,
 		cursorChar
     } = useData()
+
 	// render text
 	const renderInput = () => {
 		return text.slice(window.min, window.max).map((line, i) => {
@@ -45,7 +47,8 @@ export function App() {
 			try {
 				msg = String(evaluate(expr, scope))
 			} catch (err) {
-				msg = String(err.message)
+				// msg = String(err.message)
+				msg = "err!"
 			}
 			// if line too long, truncate it
 			msg = msg.replace("\n", " ")

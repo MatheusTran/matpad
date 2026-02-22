@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext, createContext } from "react";
 import { useStdout, useInput, useApp } from "ink";
+import { copy, paste } from "copy-paste";
 
 
 const context = createContext()
@@ -55,12 +56,40 @@ export function DataContext(props) {
 	// input handling
 	useInput((input, key) => {
 		if (key.escape) exit();
-		// if (key.ctrl || key.meta) {
-
-		// 	return
-		// } // too lazy to do commands like ctrl + c, ctrl + v
-
 		const { row, col } = cursor;
+
+		if (key.ctrl) {
+			if (input == "x") {
+				copy(text[row], (err, text) =>{})
+				setText(lines => {
+					lines[row] = ""
+					const newLines = [...lines];
+					newLines[row - 1] += newLines[row];
+					newLines.splice(row, 1);
+					let newRow = row
+					if (row >= lines.length - 1) {
+						newRow--;
+					} 
+					setCursor({ row: newRow, col: Math.min(newLines[newRow].length, col) });
+					return newLines;
+				});
+				return
+			}
+			if (input === "v") {
+				const pastedText = paste().normalize().replace("\n", "")
+				setText(lines => {
+					const newLines = [...lines];
+					newLines[row] =
+						newLines[row].slice(0, col) +
+						pastedText +
+						newLines[row].slice(col);
+					return newLines;
+				});
+				setCursor({row, col:col+pastedText.length})
+			}
+			return
+		} // too lazy to do commands like ctrl + c, ctrl + v
+
 
 		// enter, create a new line in the array text.
 		if (key.return) {
